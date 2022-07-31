@@ -1,0 +1,33 @@
+#!/usr/bin/bash
+Stage 2 code
+### Count the number of sequences in DNA.fa
+wget https://raw.githubusercontent.com/HackBio-Internship/wale-home-tasks/main/DNA.fa
+grep ">" DNA.fa |wc -l
+### Total A, T, G & C counts for the sequence 
+grep -v "^>" DNA.fa | wc -c
+### Already installed minicinda in stage zero
+### Creating an environment
+conda env list
+conda create -n hackbio_genomics
+conda activate hackbio_genomics
+### Installing the software
+conda install -c bioconda samtools
+conda install -c bioconda fastqc
+conda install -c bioconda multiqc
+### Downloading dataset 
+mkdir sample_dataset
+cd sample_dataset
+wget https://github.com/josoga2/ytdataset/blob/main/dataset/raw_reads/ACBarrie_R1.fastq.gz?raw=true -O ACBarrie_R1.fastq.gz
+wget https://github.com/josoga2/ytdataset/blob/main/dataset/raw_reads/Alsen_R2.fastq.gz?raw=true -O Alsen_R2.fastq.gz
+wget https://github.com/josoga2/ytdataset/blob/main/dataset/raw_reads/Chara_R1.fastq.gz?raw=true -O Chara_R1.fastq.gz
+###Creating an Output folder
+Cd ..
+mkdir output
+### Fastqc
+fastqc sample_dataset/ACBarrie_R1.fastq.gz -o output
+fastqc sample_dataset/Drysdale_R1.fastq.gz -o output
+fastqc sample_dataset/Chara_R1.fastq.gz -o output
+fastqc sample_dataset/ Alsen_R2.fastq.gz -o output
+cd output
+ls
+done
