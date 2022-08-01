@@ -1,5 +1,4 @@
 #!/usr/bin/bash
-Stage 2 code
 ### Count the number of sequences in DNA.fa
 wget https://raw.githubusercontent.com/HackBio-Internship/wale-home-tasks/main/DNA.fa
 grep ">" DNA.fa |wc -l
@@ -21,7 +20,7 @@ wget https://github.com/josoga2/ytdataset/blob/main/dataset/raw_reads/ACBarrie_R
 wget https://github.com/josoga2/ytdataset/blob/main/dataset/raw_reads/Alsen_R2.fastq.gz?raw=true -O Alsen_R2.fastq.gz
 wget https://github.com/josoga2/ytdataset/blob/main/dataset/raw_reads/Chara_R1.fastq.gz?raw=true -O Chara_R1.fastq.gz
 ###Creating an Output folder
-Cd ..
+cd ..
 mkdir output
 ### Fastqc
 fastqc sample_dataset/ACBarrie_R1.fastq.gz -o output
