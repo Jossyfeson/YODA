@@ -44,4 +44,8 @@ nano reference.fasta
 mkdir references
 mv references.fasta references/
 bwa index references/reference.fasta
+conda install -c bioconda bbmap
+repair.sh
+bash aligner.sh
+ls -h alignment_map/ -lh
 done
