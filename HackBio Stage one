@@ -33,10 +33,12 @@ ls
 ### MultiQC
 multiqc output/
 ### Fastp
+conda install -c bioconda fastp
 bash trim.sh
 ls
 cd trimmed_reads/
 ### BWA 
+conda install -c bioconda bwa
 touch reference.fasta
 nano reference.fasta
 mkdir references
