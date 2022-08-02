@@ -36,4 +36,10 @@ multiqc output/
 bash trim.sh
 ls
 cd trimmed_reads/
+### BWA 
+touch reference.fasta
+nano reference.fasta
+mkdir references
+mv references.fasta references/
+bwa index references/reference.fasta
 done
