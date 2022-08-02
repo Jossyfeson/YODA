@@ -48,4 +48,8 @@ conda install -c bioconda bbmap
 repair.sh
 bash aligner.sh
 ls -h alignment_map/ -lh
+### SAMTOOLS
+samtools view ACBarrie.bam | less
+samtools sort ACBarrie.bam -o ACBarrie_sorted.ba
+samtools view ACBarrie_sorted.bam | head -n 5
 done
