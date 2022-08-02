@@ -30,5 +30,10 @@ fastqc sample_dataset/Chara_R1.fastq.gz -o output
 fastqc sample_dataset/ Alsen_R2.fastq.gz -o output
 cd output
 ls
+### MultiQC
 multiqc output/
+### Fastp
+bash trim.sh
+ls
+cd trimmed_reads/
 done
