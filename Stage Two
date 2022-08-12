@@ -1,0 +1,54 @@
+#!/bin/bash/
+###Reproducing the Tutorial using the Dataset
+##Creating a workspace
+mkdir stage2
+cd stage2/
+mkdir -p data/ref_genome
+##Downloading the reference genome
+curl -L -o data/ref_genome/reference_g.fasta.gz https://zenodo.org/record/2582555/files/hg19.chr5_12_17.fa.gz
+cd data/ref_genome/
+gunzip reference_g.fasta.gz
+cd data/ref_genome/
+cd ../../
+##Downloading the dataset
+wget https://zenodo.org/record/2582555/files/SLGFSK-N_231335_r1_chr5_12_17.fastq.gz -O SLGFSK-N_231335_r1_chr5_12_17.fastq.gz
+wget https://zenodo.org/record/2582555/files/SLGFSK-N_231335_r2_chr5_12_17.fastq.gz -O SLGFSK-N_231335_r2_chr5_12_17.fastq.gz
+##Run fastp
+mkdir raw_reads
+fastp -i SLGFSK-N_231335_r1_chr5_12_17.fastq.gz -I SLGFSK-N_231335_r2_chr5_12_17.fastq.gz -o raw_reads/SLGFSK-N_231335_r1_chr5_12_17.fastq.gz -O raw_reads/SLGFSK-N_231335_r2_chr5_12_17.fastq.gz
+##Run fastqc
+conda install -c bioconda fastqc
+mkdir qc_reads
+fastqc raw_reads/SLGFSK-N_231335_r1_chr5_12_17.fastq.gz -o qc_reads/
+fastqc raw_reads/SLGFSK-N_231335_r2_chr5_12_17.fastq.gz -o qc_reads/
+mv raw_reads/ trimmed_reads
+mv trimmed_reads/ data/
+ls -lh data/trimmed_reads
+##Make the result directory
+mkdir -p results/sam results/bam results/bcf results/vcf
+##Align the reference genome using bwa
+conda install -c bioconda bwa
+bwa index data/ref_genome/reference_g.fasta
+##Unzip the trimmed reads using gunzip command
+gunzip data/trimmed_reads/SLGFSK-N_231335_r1_chr5_12_17.fastq.gz
+gunzip data/trimmed_reads/SLGFSK-N_231335_r2_chr5_12_17.fastq.gz
+ls -lh data/trimmed_reads
+bwa mem data/ref_genome/reference_g.fasta data/trimmed_reads/SLGFSK-N_231335_r1_chr5_12_17.fastq.gz data/trimmed_reads/SLGFSK-N_231335_r2_chr5_12_17.fastq.gz > results/sam/SLGFSK-N_231335.aligned.sam
+ls -lh results/sam
+##Convert SAM file to BAM file using samtools
+conda install -c bioconda bbmap
+samtools view -S -b results/sam/ SLGFSK-N_231335.aligned.sam > results/bam/ SLGFSK-N_231335.bam
+##Sort the BAM file
+samtools sort -o results/bam/ SLGFSK-N_231335.aligned.sorted.bam results/bam/ SLGFSK-N_231335.aligned.bam
+samtools flagstat results/bam/ SLGFSK-N_231335.aligned.sorted.bam
+##bcftools
+conda install -c bioconda bcftools
+bcftools mpileup -O b -o results/bcf/ SLGFSK-N_231335_raw.bcf -f data/ref_genome/reference_g.fasta results/bam/ SLGFSK-N_231335.aligned.sorted.bam
+bcftools call --ploidy 1 -m -v -o results/vcf/ SLGFSK-N_231335_variants.vcf results/bcf/ SLGFSK-N_231335_raw.bcf
+ls -lh results/vcf/
+ls -lh results/bcf/
+vcfutils.pl varFilter results/vcf/ SLGFSK-N_231335_variants.vcf  > results/vcf/ SLGFSK-N_231335_final_variants.vcf
+less -S results/vcf/ SLGFSK-N_231335_final_variants.vcf
+grep -v "#" results/vcf/ SLGFSK-N_231335_final_variants.vcf | wc -l
+samtools index results/bam/ SLGFSK-N_231335.aligned.sorted.bam
+done
