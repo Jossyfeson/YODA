@@ -32,3 +32,9 @@ echo "Supply the reference genome"
 read ref_genome
 
 bwa index $ref_genome
+
+mkdir -p sam bam bcf vcf
+
+for file in ~/dc_workshop/data/trimmed_fastq_small/*_1.trim.sub.fastq
+    do
+    echo "working with file $fq1"
