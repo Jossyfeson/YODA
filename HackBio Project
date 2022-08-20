@@ -1,2 +1,34 @@
-#
+#!/usr/bin/bash
 set -e
+mkdir -p ~/workshop/data/untrimmed_fastq_files
+
+#Move the raw data into untrimmed_fastq_files
+cd ~/workshop/data/untrimmed_fastq_files
+
+echo "Running FastQC ..."
+fastqc *.fastq*
+
+mkdir -p ~/workshop/results/fastqc_untrimmed_reads
+
+echo "Saving FastQC results..."
+mv *.zip ~/workshop/results/fastqc_untrimmed_reads/
+mv *.html ~/workshop/results/fastqc_untrimmed_reads/
+
+cd ~/workshop/results/fastqc_untrimmed_reads/
+
+echo "Unzipping..."
+for filename in *.zip
+    do
+    unzip $filename
+    done
+
+echo "Saving summary..."
+cat */summary.txt > ~/workshop/docs/fastqc_summaries.txt
+
+cd ~/dc_workshop/results
+
+#Supply the reference genome
+echo "Supply the reference genome"
+read ref_genome
+
+bwa index $ref_genome
