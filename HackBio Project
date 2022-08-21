@@ -27,9 +27,12 @@ cat */summary.txt > ~/workshop/docs/fastqc_summaries.txt
 
 cd ~/dc_workshop/results
 
+
 #Supply the reference genome
 echo "Supply the reference genome"
 read ref_genome
+
+gunzip ref_genome
 
 bwa index $ref_genome
 
