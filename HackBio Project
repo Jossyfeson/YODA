@@ -70,11 +70,11 @@ for fq1 in ~/workshop/data/trimmed_fastq_small/*_1.trim.sub.fastq
     variants=~/workshop/results/vcf/${base}_variants.vcf
     final_variants=~/workshop/results/vcf/${base}_final_variants.vcf 
 
-    bwa mem $genome $fq1 $fq2 > $sam
+    bwa mem $ref_genome $fq1 $fq2 > $sam
     samtools view -S -b $sam > $bam
     samtools sort -o $sorted_bam $bam
     samtools index $sorted_bam
-    bcftools mpileup -O b -o $raw_bcf -f $genome $sorted_bam
+    bcftools mpileup -O b -o $raw_bcf -f $ref_genome $sorted_bam
     bcftools call --ploidy 1 -m -v -o $variants $raw_bcf 
     vcfutils.pl varFilter $variants > $final_variants
    
