@@ -9,6 +9,10 @@ sudo apt-get install bcftools
 
 mkdir -p ~/workshop/data/untrimmed_fastq_files
 
+echo "Move your fastq files to the ~/workshop/data/untrimmed_fastq_files directory"
+echo "Input the path to the untrimmed fastq files"
+read untrimmed_fastq_file
+
 #Move the raw data into untrimmed_fastq_files
 cd ~/workshop/data/untrimmed_fastq_files
 
