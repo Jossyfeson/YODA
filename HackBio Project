@@ -1,5 +1,12 @@
 #!/usr/bin/bash
 set -e
+
+sudo apt-get install fastp
+sudo apt-get install fastqc
+sudo apt-get install bwa
+sudo apt-get install samtools
+sudo apt-get install bcftools
+
 mkdir -p ~/workshop/data/untrimmed_fastq_files
 
 #Move the raw data into untrimmed_fastq_files
