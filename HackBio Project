@@ -7,13 +7,6 @@ sudo apt-get install bwa
 sudo apt-get install samtools
 sudo apt-get install bcftools
 
-#Move the raw data into untrimmed_fastq_files
-mkdir -p ~/workshop/data/untrimmed_fastq_files
-echo "Move your fastq files to the ~/workshop/data/untrimmed_fastq_files directory"
-echo "Input the path to the untrimmed fastq files from home directory"
-read untrimmed_fastq_file
-mv $untrimmed_fastq_file ~/workshop/data/untrimmed_fastq_files
-
 #Running FastQC
 cd ~/workshop/data/untrimmed_fastq_files
 echo "Running FastQC ..."
@@ -35,7 +28,7 @@ cat */summary.txt > ~/workshop/docs/fastqc_summaries.txt
 
 #Running Fastp
 mkdir qc_reads
-for SAMPLE in "${SAMPLES[@]}"; do
+for SAMPLE in *fastq; do
 
   fastp \
     -i "$PWD/${SAMPLE}_R1.fastq.gz" \
