@@ -33,6 +33,17 @@ for filename in *.zip
 echo "Saving summary..."
 cat */summary.txt > ~/workshop/docs/fastqc_summaries.txt
 
+#Running Fastp
+for SAMPLE in "${SAMPLES[@]}"; do
+
+  fastp \
+    -i "$PWD/${SAMPLE}_R1.fastq.gz" \
+    -I "$PWD/${SAMPLE}_R2.fastq.gz" \
+    -o "qc_reads/${SAMPLE}_R1.fastq.gz" \
+    -O "qc_reads/${SAMPLE}_R2.fastq.gz" \
+    --html "qc_reads/${SAMPLE}_fastp.html" 
+done
+
 #Variant calling
 
 #Supply the reference genome
