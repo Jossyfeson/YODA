@@ -7,42 +7,40 @@ sudo apt-get install bwa
 sudo apt-get install samtools
 sudo apt-get install bcftools
 
-mkdir -p ~/workshop/data/untrimmed_fastq_files
-
-echo "Move your fastq files to the ~/workshop/data/untrimmed_fastq_files directory"
-echo "Input the path to the untrimmed fastq files"
-read untrimmed_fastq_file
-
 #Move the raw data into untrimmed_fastq_files
-cd ~/workshop/data/untrimmed_fastq_files
+mkdir -p ~/workshop/data/untrimmed_fastq_files
+echo "Move your fastq files to the ~/workshop/data/untrimmed_fastq_files directory"
+echo "Input the path to the untrimmed fastq files from home directory"
+read untrimmed_fastq_file
+mv $untrimmed_fastq_file ~/workshop/data/untrimmed_fastq_files
 
+#Running FastQC
+cd ~/workshop/data/untrimmed_fastq_files
 echo "Running FastQC ..."
 fastqc *.fastq*
-
 mkdir -p ~/workshop/results/fastqc_untrimmed_reads
-
 echo "Saving FastQC results..."
 mv *.zip ~/workshop/results/fastqc_untrimmed_reads/
 mv *.html ~/workshop/results/fastqc_untrimmed_reads/
 
+#Unzipping the fastq file
 cd ~/workshop/results/fastqc_untrimmed_reads/
-
 echo "Unzipping..."
 for filename in *.zip
     do
     unzip $filename
     done
-
 echo "Saving summary..."
 cat */summary.txt > ~/workshop/docs/fastqc_summaries.txt
 
-cd ~/dc_workshop/results
-
+#Variant calling
 
 #Supply the reference genome
+mkdir ~/dc_workshop/data/ref_genome
 echo "Supply the reference genome"
+echo "Input the path to the reference genome"
 read ref_genome
-
+mv $ref_genome ~/dc_workshop/data/ref_genome
 gunzip ref_genome
 
 bwa index $ref_genome
