@@ -28,7 +28,7 @@ cat */summary.txt > ~/workshop/docs/fastqc_summaries.txt
 
 #Running Fastp
 mkdir qc_reads
-for SAMPLE in *fastq*; do
+for SAMPLE in *.fastq*; do
 
   fastp \
     -i "$PWD/${SAMPLE}_R1.fastq.gz" \
