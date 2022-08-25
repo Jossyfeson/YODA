@@ -23,6 +23,7 @@ read move
     do
     $move
     done
+fi
 
 #Running FastQC
 cd ~/workshop/data/untrimmed_fastq_files
@@ -51,12 +52,12 @@ do
   fastp \
     -i "$PWD/${f1}" \
     -I "$PWD/${f2}" \
-    -o "qc_reads/$(basename $f1 .1.fastq)_1.trim.sub.fastq" \
-    -O "qc_reads/$(basename $f2 .2.fastq)_2.trim.sub.fastq" \
-    --html "qc_reads/${f1}_fastp.html" 
+    -o "qc_reads/$(basename ${f1%_*})_r1.trim.sub.fastq" \
+    -O "qc_reads/$(basename ${f2%_*})_r2.trim.sub.fastq" \
+    --html "qc_reads/${f1%.*}_fastp.html" 
 done
 
-mv qc_reads/ ~/workshop/data/trimmed_fastq_small/
+mv qc_reads/ ~/workshop/data/trimmed_fastq_file/
 #Variant calling
 
 #Supply the reference genome
@@ -72,15 +73,15 @@ bwa index $ref_genome
 
 mkdir -p sam bam bcf vcf
 
-for fq1 in ~/workshop/data/trimmed_fastq_small/*_1.trim.sub.fastq
+for fq1 in ~/workshop/data/trimmed_fastq_file/*_r1.trim.sub.fastq
     do
     echo "working with file $fq1"
 
-    base=$(basename $fq1 _1.trim.sub.fastq)
+    base=$(basename $fq1 _r1.trim.sub.fastq)
     echo "base name is $base"
 
-    fq1=~/workshop/data/trimmed_fastq_small/${base}_1.trim.sub.fastq
-    fq2=~/workshop/data/trimmed_fastq_small/${base}_2.trim.sub.fastq
+    fq1=~/workshop/data/trimmed_fastq_file/${base}_r1.trim.sub.fastq
+    fq2=~/workshop/data/trimmed_fastq_file/${base}_r2.trim.sub.fastq
     sam=~/workshop/results/sam/${base}.aligned.sam
     bam=~/workshop/results/bam/${base}.aligned.bam
     sorted_bam=~/workshop/results/bam/${base}.aligned.sorted.bam
