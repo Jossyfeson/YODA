@@ -14,31 +14,32 @@ else
         echo "Let us proceed";
 fi
 
+#Moving your untrimmed datasets
 mkdir -p ~/workshop/data/untrimmed_fastq_files
 echo "Move your untrimmed datasets into ~/workshop/data/untrimmed_fastq_files"
 echo "Input the path to the dataset: "
 read move
 cd $move
 echo "Moving the untrimmed fastq files"
-mv *.zip ~/workshop/data/untrimmed_fastq_files
+mv *.gz ~/workshop/data/untrimmed_fastq_files
     
 
 #Running FastQC
 cd ~/workshop/data/untrimmed_fastq_files
 echo "Running FastQC ..."
-for file in *_fastq.zip
+for file in *_fastq.gz
         do
         fastqc $file
         done
 mkdir -p ~/workshop/results/fastqc_untrimmed_reads
 echo "Saving FastQC results..."
-mv *.zip ~/workshop/results/fastqc_untrimmed_reads/
+mv *.gz ~/workshop/results/fastqc_untrimmed_reads/
 mv *.html ~/workshop/results/fastqc_untrimmed_reads/
 
 #Unzipping the fastq file
 cd ~/workshop/results/fastqc_untrimmed_reads/
 echo "Unzipping..."
-for filename in *.zip
+for filename in *.gz
     do
     unzip $filename
     done
@@ -67,9 +68,9 @@ mv qc_reads/ ~/workshop/data/trimmed_fastq_file/
 #Supply the reference genome
 mkdir ~/workshop/data/ref_genome
 echo "Supply the reference genome"
-echo "Input the path to the reference genome: "
-read ref_genome
-mv $ref_genome ~/workshop/data/ref_genome
+read -p "Input the path to the reference genome: " ref_genome
+cd $ref_genome
+mv *.fa.gz ~/workshop/data/ref_genome
 
 cd ~/workshop/data/ref_genome
 gunzip $ref_genome
