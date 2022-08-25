@@ -1,11 +1,28 @@
 #!/usr/bin/bash
 set -e
 
-sudo apt-get install fastp
-sudo apt-get install fastqc
-sudo apt-get install bwa
-sudo apt-get install samtools
-sudo apt-get install bcftools
+echo "Do you have all the packages needed for variant calling installed?"
+echo "Yes/No: "
+read Input
+
+if [[$Input == No]]
+then
+    do
+    sudo apt-get install fastp \
+    sudo apt-get install fastqc \
+    sudo apt-get install bwa \
+    sudo apt-get install samtools \
+    sudo apt-get install bcftools \
+    done
+elif [[$Input == Yes]]
+then
+    echo "Let us proceed"
+echo "Move your untrimmed fastq files into ~/workshop/data/untrimmed_fastq_files"
+echo "Using thhe 'mv' command like this mv [current path of the untrimmed fastq file] ~/workshop/data/untrimmed_fastq_files"
+read move
+    do
+    $move
+    done
 
 #Running FastQC
 cd ~/workshop/data/untrimmed_fastq_files
@@ -28,14 +45,15 @@ cat */summary.txt > ~/workshop/docs/fastqc_summaries.txt
 
 #Running Fastp
 mkdir qc_reads
-for SAMPLE in *.fastq*; do
-
+for f1 in *1.fastq
+do
+    f2=${f1%%1.fastq}"2.fastq"
   fastp \
-    -i "$PWD/${SAMPLE}_R1.fastq.gz" \
-    -I "$PWD/${SAMPLE}_R2.fastq.gz" \
-    -o "qc_reads/${SAMPLE}_1.trim.sub.fastq" \
-    -O "qc_reads/${SAMPLE}_2.trim.sub.fastq" \
-    --html "qc_reads/${SAMPLE}_fastp.html" 
+    -i "$PWD/${f1}_1.trim.sub.fastq" \
+    -I "$PWD/${f2}_2.trim.sub.fastq" \
+    -o "qc_reads/${f1}_1.trim.sub.fastq" \
+    -O "qc_reads/${f2}_2.trim.sub.fastq" \
+    --html "qc_reads/${f1}_fastp.html" 
 done
 
 mv qc_reads/ ~/workshop/data/trimmed_fastq_small/
