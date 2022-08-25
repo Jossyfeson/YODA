@@ -15,7 +15,7 @@ else
 fi
 
 mkdir -p ~/workshop/data/untrimmed_fastq_files
-echo "Move your untrimmed fastq files into ~/workshop/data/untrimmed_fastq_files"
+echo "Move your untrimmed datasets into ~/workshop/data/untrimmed_fastq_files"
 echo "Input the path to the dataset: "
 read move
 cd $move
@@ -26,7 +26,10 @@ mv *.zip ~/workshop/data/untrimmed_fastq_files
 #Running FastQC
 cd ~/workshop/data/untrimmed_fastq_files
 echo "Running FastQC ..."
-fastqc *.fastq*
+for file in *_fastq.zip
+        do
+        fastqc $file
+        done
 mkdir -p ~/workshop/results/fastqc_untrimmed_reads
 echo "Saving FastQC results..."
 mv *.zip ~/workshop/results/fastqc_untrimmed_reads/
