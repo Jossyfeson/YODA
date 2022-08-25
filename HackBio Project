@@ -46,6 +46,7 @@ for filename in *.zip
     done
 echo "Saving summary..."
 cat */summary.txt > ~/workshop/docs/fastqc_summaries.txt
+mkdir -p ~/workshop/data/trimmed_fastq_file/
 
 #Running Fastp
 echo "Running Fastp"
