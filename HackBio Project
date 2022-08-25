@@ -1,7 +1,7 @@
 #! /bin/bash
 
 echo "Do you have all the packages needed for variant calling installed?"
-read -p "y/n: " Input
+read -p "y = Yes/n = No: " Input
 
 if [[ $Input = n ]]
 then
@@ -15,6 +15,7 @@ else
 fi
 
 #Moving your untrimmed datasets
+echo "Creating a folder"
 mkdir -p ~/workshop/data/untrimmed_fastq_files
 echo "Move your untrimmed datasets into ~/workshop/data/untrimmed_fastq_files"
 echo "Input the path to the dataset: "
@@ -27,7 +28,7 @@ mv *.gz ~/workshop/data/untrimmed_fastq_files
 #Running FastQC
 cd ~/workshop/data/untrimmed_fastq_files
 echo "Running FastQC ..."
-for file in *_fastq.gz
+for file in *.fastq.gz
         do
         fastqc $file
         done
@@ -60,8 +61,8 @@ do
     -O "qc_reads/$(basename ${f2%_*})_r2.trimmed.fastq" \
     --html "qc_reads/${f1%_*}_fastp.html" 
 done
-
-mv qc_reads/ ~/workshop/data/trimmed_fastq_file/
+cd qc_reads
+mv *.trimmed.fastq ~/workshop/data/trimmed_fastq_file/
 
 #Variant calling
 
