@@ -17,13 +17,16 @@ then
 elif [[$Input -eq Yes]]
 then
     echo "Let us proceed"
+fi
+
 echo "Move your untrimmed fastq files into ~/workshop/data/untrimmed_fastq_files"
-echo "Using thhe 'mv' command like this mv [current path of the untrimmed fastq file] ~/workshop/data/untrimmed_fastq_files"
+echo "Using the 'mv' command like this: mv [current path of the untrimmed fastq files] ~/workshop/data/untrimmed_fastq_files"
+echo "Supply the command as stated above: "
 read move
+echo "Moving the untrimmed fastq files"
     do
     $move
     done
-fi
 
 #Running FastQC
 cd ~/workshop/data/untrimmed_fastq_files
@@ -45,6 +48,7 @@ echo "Saving summary..."
 cat */summary.txt > ~/workshop/docs/fastqc_summaries.txt
 
 #Running Fastp
+echo "Running Fastp"
 mkdir qc_reads
 for f1 in *1.fastq
 do
@@ -52,36 +56,38 @@ do
   fastp \
     -i "$PWD/${f1}" \
     -I "$PWD/${f2}" \
-    -o "qc_reads/$(basename ${f1%_*})_r1.trim.sub.fastq" \
-    -O "qc_reads/$(basename ${f2%_*})_r2.trim.sub.fastq" \
-    --html "qc_reads/${f1%.*}_fastp.html" 
+    -o "qc_reads/$(basename ${f1%_*})_r1.trimmed.fastq" \
+    -O "qc_reads/$(basename ${f2%_*})_r2.trimmed.fastq" \
+    --html "qc_reads/${f1%_*}_fastp.html" 
 done
 
 mv qc_reads/ ~/workshop/data/trimmed_fastq_file/
+
 #Variant calling
 
 #Supply the reference genome
 mkdir ~/workshop/data/ref_genome
 echo "Supply the reference genome"
-echo "Input the path to the reference genome"
-mv $ref_genome ~/workshop/data/ref_genome
+echo "Input the path to the reference genome: "
 read ref_genome
-gunzip ref_genome
-mkdir -p results/sam results/bam results/bcf results/vcf
+mv $ref_genome ~/workshop/data/ref_genome
 
+cd ~/workshop/data/ref_genome
+gunzip $ref_genome
+mkdir -p ~/workshop/results/sam results/bam results/bcf results/vcf
+
+#Indexing the reference genome
 bwa index $ref_genome
 
-mkdir -p sam bam bcf vcf
-
-for fq1 in ~/workshop/data/trimmed_fastq_file/*_r1.trim.sub.fastq
+for file1 in ~/workshop/data/trimmed_fastq_file/*_r1.trimmed.fastq
     do
-    echo "working with file $fq1"
+    echo "working with file $file1"
 
-    base=$(basename $fq1 _r1.trim.sub.fastq)
+    base=$(basename $file1 _r1.trimmed.fastq)
     echo "base name is $base"
 
-    fq1=~/workshop/data/trimmed_fastq_file/${base}_r1.trim.sub.fastq
-    fq2=~/workshop/data/trimmed_fastq_file/${base}_r2.trim.sub.fastq
+    file1=~/workshop/data/trimmed_fastq_file/${base}_r1.trimmed.fastq
+    file2=~/workshop/data/trimmed_fastq_file/${base}_r2.trimmed.fastq
     sam=~/workshop/results/sam/${base}.aligned.sam
     bam=~/workshop/results/bam/${base}.aligned.bam
     sorted_bam=~/workshop/results/bam/${base}.aligned.sorted.bam
@@ -89,7 +95,7 @@ for fq1 in ~/workshop/data/trimmed_fastq_file/*_r1.trim.sub.fastq
     variants=~/workshop/results/vcf/${base}_variants.vcf
     final_variants=~/workshop/results/vcf/${base}_final_variants.vcf 
 
-    bwa mem $ref_genome $fq1 $fq2 > $sam
+    bwa mem $ref_genome $file1 $file2 > $sam
     samtools view -S -b $sam > $bam
     samtools sort -o $sorted_bam $bam
     samtools index $sorted_bam
