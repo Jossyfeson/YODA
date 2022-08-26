@@ -18,21 +18,21 @@ fi
 #Moving your untrimmed datasets
 echo "Creating a folder..."
 mkdir -p ~/workshop/data/untrimmed_fastq_files
-echo "Move your untrimmed datasets into ~/workshop/data/untrimmed_fastq_files"
+echo "Copy your untrimmed datasets into ~/workshop/data/untrimmed_fastq_files"
 echo "Input the path to the dataset: "
 read move
 cd $move
-echo "Moving the untrimmed fastq files..."
-mv *.gz ~/workshop/data/untrimmed_fastq_files
+echo "Copying the untrimmed fastq files..."
+cp *.gz ~/workshop/data/untrimmed_fastq_files
     
 #Move the reference genome
 mkdir ~/workshop/data/ref_genome
-echo "Moving the reference genome into ~/workshop/data/ref_genome"
+echo "Copy the reference genome into ~/workshop/data/ref_genome"
 echo "Input the path to the reference genome: "
 read ref_genome
 cd $ref_genome
-echo "Moving the reference genome..."
-mv *.fa.gz ~/workshop/data/ref_genome
+echo "Copying the reference genome..."
+cp *.fa.gz ~/workshop/data/ref_genome
 
 #Running FastQC
 cd ~/workshop/data/untrimmed_fastq_files
@@ -78,7 +78,7 @@ mv *.trimmed.fastq ~/workshop/data/trimmed_fastq_file/
 #Variant calling
 
 echo "Variant calling..."
-
+echo "Unzipping the reference genome"
 cd ~/workshop/data/ref_genome
 gunzip *.fa.gz
 mkdir -p ~/workshop/results/sam results/bam results/bcf results/vcf
