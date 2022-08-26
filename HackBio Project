@@ -65,6 +65,7 @@ do
     --html "qc_reads/${f1%_*}_fastp.html" 
 done
 cd qc_reads
+echo "Moving trimmed files"
 mv *.trimmed.fastq ~/workshop/data/trimmed_fastq_file/
 
 #Variant calling
