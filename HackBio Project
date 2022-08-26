@@ -39,9 +39,10 @@ mv *.gz ~/workshop/results/fastqc_untrimmed_reads/
 mv *.html ~/workshop/results/fastqc_untrimmed_reads/
 
 #Unzipping the fastq file
+echo "Changing directory"
 cd ~/workshop/results/fastqc_untrimmed_reads/
 echo "Unzipping..."
-for filename in *.gz
+for filename in *.zip
     do
     gunzip $filename
     done
