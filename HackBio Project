@@ -73,16 +73,17 @@ echo "Variant calling"
 #Supply the reference genome
 mkdir ~/workshop/data/ref_genome
 echo "Supply the reference genome"
-read -p "Input the path to the reference genome: " ref_genome
+echo "Input the path to the reference genome: "
+read $ref_genome
 cd $ref_genome
 mv *.fa.gz ~/workshop/data/ref_genome
 
 cd ~/workshop/data/ref_genome
-gunzip $ref_genome
+gunzip *.fa.gz
 mkdir -p ~/workshop/results/sam results/bam results/bcf results/vcf
 
 #Indexing the reference genome
-bwa index $ref_genome
+bwa index *.fa
 
 for file1 in ~/workshop/data/trimmed_fastq_file/*_r1.trimmed.fastq
     do
