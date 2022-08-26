@@ -16,21 +16,22 @@ else
 fi
 
 #Moving your untrimmed datasets
-echo "Creating a folder"
+echo "Creating a folder..."
 mkdir -p ~/workshop/data/untrimmed_fastq_files
 echo "Move your untrimmed datasets into ~/workshop/data/untrimmed_fastq_files"
 echo "Input the path to the dataset: "
 read move
 cd $move
-echo "Moving the untrimmed fastq files"
+echo "Moving the untrimmed fastq files..."
 mv *.gz ~/workshop/data/untrimmed_fastq_files
     
 #Move the reference genome
 mkdir ~/workshop/data/ref_genome
-echo "Supply the reference genome"
+echo "Moving the reference genome into ~/workshop/data/ref_genome"
 echo "Input the path to the reference genome: "
 read ref_genome
 cd $ref_genome
+echo "Moving the reference genome..."
 mv *.fa.gz ~/workshop/data/ref_genome
 
 #Running FastQC
@@ -46,7 +47,7 @@ mv *.gz ~/workshop/results/fastqc_untrimmed_reads/
 mv *.html ~/workshop/results/fastqc_untrimmed_reads/
 
 #Unzipping the fastq file
-echo "Changing directory"
+echo "Changing directory..."
 cd ~/workshop/results/fastqc_untrimmed_reads/
 echo "Unzipping..."
 for filename in *.zip
@@ -58,7 +59,7 @@ mkdir -p ~/workshop/docs
 mkdir -p ~/workshop/data/trimmed_fastq_file/
 
 #Running Fastp
-echo "Running Fastp"
+echo "Running Fastp..."
 mkdir qc_reads
 for f1 in *1.fastq
 do
@@ -71,18 +72,19 @@ do
     --html "qc_reads/${f1%_*}_fastp.html" 
 done
 cd qc_reads
-echo "Moving trimmed files"
+echo "Moving trimmed files..."
 mv *.trimmed.fastq ~/workshop/data/trimmed_fastq_file/
 
 #Variant calling
 
-echo "Variant calling"
+echo "Variant calling..."
 
 cd ~/workshop/data/ref_genome
 gunzip *.fa.gz
 mkdir -p ~/workshop/results/sam results/bam results/bcf results/vcf
 
 #Indexing the reference genome
+echo "Indexing the reference genome..."
 bwa index *.fa
 
 for file1 in ~/workshop/data/trimmed_fastq_file/*_r1.trimmed.fastq
@@ -100,10 +102,13 @@ for file1 in ~/workshop/data/trimmed_fastq_file/*_r1.trimmed.fastq
     raw_bcf=~/workshop/results/bcf/${base}_raw.bcf
     variants=~/workshop/results/vcf/${base}_variants.vcf
     final_variants=~/workshop/results/vcf/${base}_final_variants.vcf 
-
+    echo "Aligning..."
     bwa mem $ref_genome $file1 $file2 > $sam
+    echo "Converting to bam ..."
     samtools view -S -b $sam > $bam
+    echo "Sorting bam ..."
     samtools sort -o $sorted_bam $bam
+    echo "Indexing sorted files ..."
     samtools index $sorted_bam
     bcftools mpileup -O b -o $raw_bcf -f $ref_genome $sorted_bam
     bcftools call --ploidy 1 -m -v -o $variants $raw_bcf 
