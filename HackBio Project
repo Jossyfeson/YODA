@@ -42,9 +42,10 @@ cd ~/workshop/results/fastqc_untrimmed_reads/
 echo "Unzipping..."
 for filename in *.gz
     do
-    unzip $filename
+    gunzip $filename
     done
 echo "Saving summary..."
+mkdir -p ~/workshop/docs
 cat */summary.txt > ~/workshop/docs/fastqc_summaries.txt
 mkdir -p ~/workshop/data/trimmed_fastq_file/
 
