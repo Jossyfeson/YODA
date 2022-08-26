@@ -66,6 +66,7 @@ mv *.trimmed.fastq ~/workshop/data/trimmed_fastq_file/
 
 #Variant calling
 
+echo "Variant calling"
 #Supply the reference genome
 mkdir ~/workshop/data/ref_genome
 echo "Supply the reference genome"
