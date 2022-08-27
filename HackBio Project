@@ -18,21 +18,24 @@ fi
 #Moving your untrimmed datasets
 echo "Creating a folder..."
 mkdir -p ~/workshop/data/untrimmed_fastq_files
+echo "Done"
 echo "Copy your untrimmed datasets into ~/workshop/data/untrimmed_fastq_files"
 echo "Input the path to the dataset: "
 read move
 cd $move
 echo "Copying the untrimmed fastq files..."
 cp *.gz ~/workshop/data/untrimmed_fastq_files
-    
+echo "Done"   
+
 #Move the reference genome
 mkdir ~/workshop/data/ref_genome
 echo "Copy the reference genome into ~/workshop/data/ref_genome"
 echo "Input the path to the reference genome: "
-read ref_genome
-cd $ref_genome
+read reference_genome
+cd $reference_genome
 echo "Copying the reference genome..."
 cp *.fa.gz ~/workshop/data/ref_genome
+echo "Done"
 
 #Running FastQC
 cd ~/workshop/data/untrimmed_fastq_files
@@ -45,18 +48,22 @@ mkdir -p ~/workshop/results/fastqc_untrimmed_reads
 echo "Saving FastQC results..."
 mv *.gz ~/workshop/results/fastqc_untrimmed_reads/
 mv *.html ~/workshop/results/fastqc_untrimmed_reads/
+echo "Done"
 
 #Unzipping the fastq file
 echo "Changing directory..."
 cd ~/workshop/results/fastqc_untrimmed_reads/
+echo "Done"
 echo "Unzipping..."
-for filename in *.zip
+for filename in *.gz
     do
     gunzip $filename
     done
+echo "Done"
 echo "Saving summary..."
 mkdir -p ~/workshop/docs
 mkdir -p ~/workshop/data/trimmed_fastq_file/
+echo "Done"
 
 #Running Fastp
 echo "Running Fastp..."
@@ -71,22 +78,26 @@ do
     -O "qc_reads/$(basename ${f2%_*})_r2.trimmed.fastq" \
     --html "qc_reads/${f1%_*}_fastp.html" 
 done
+echo "Done"
 cd qc_reads
 echo "Moving trimmed files..."
 mv *.trimmed.fastq ~/workshop/data/trimmed_fastq_file/
+echo "Done"
 
 #Variant calling
 
 echo "Variant calling..."
 echo "Unzipping the reference genome"
 cd ~/workshop/data/ref_genome
-gunzip *.fa.gz
+gunzip *fa.gz
+echo "Done"
 mkdir -p ~/workshop/results/sam results/bam results/bcf results/vcf
+ref_genome=~/workshop/data/ref_genome*.fa
 
 #Indexing the reference genome
 echo "Indexing the reference genome..."
-bwa index *.fa
-
+bwa index $ref_genome
+echo "Done"
 for file1 in ~/workshop/data/trimmed_fastq_file/*_r1.trimmed.fastq
     do
     echo "working with file $file1"
@@ -104,10 +115,13 @@ for file1 in ~/workshop/data/trimmed_fastq_file/*_r1.trimmed.fastq
     final_variants=~/workshop/results/vcf/${base}_final_variants.vcf 
     echo "Aligning..."
     bwa mem $ref_genome $file1 $file2 > $sam
+    echo "Done"
     echo "Converting to bam ..."
     samtools view -S -b $sam > $bam
+    echo "Done"
     echo "Sorting bam ..."
     samtools sort -o $sorted_bam $bam
+    echo "Done"
     echo "Indexing sorted files ..."
     samtools index $sorted_bam
     bcftools mpileup -O b -o $raw_bcf -f $ref_genome $sorted_bam
@@ -115,3 +129,4 @@ for file1 in ~/workshop/data/trimmed_fastq_file/*_r1.trimmed.fastq
     vcfutils.pl varFilter $variants > $final_variants
    
     done
+    echo "Done"
